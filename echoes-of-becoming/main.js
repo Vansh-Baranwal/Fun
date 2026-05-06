@@ -911,6 +911,146 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // =========================================================================
+    // 11. EASTER EGGS & HIDDEN INTERACTIONS
+    // =========================================================================
+
+    // 11.1 Global Lighting Shift
+    gsap.to(':root', {
+        '--current-glow': '#7B61FF',
+        scrollTrigger: {
+            trigger: 'body',
+            start: 'top top',
+            end: 'center center',
+            scrub: true
+        }
+    });
+    gsap.to(':root', {
+        '--current-glow': '#FF6B35',
+        scrollTrigger: {
+            trigger: 'body',
+            start: 'center center',
+            end: 'bottom bottom',
+            scrub: true
+        }
+    });
+
+    // 11.2 Konami Code
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let konamiIndex = 0;
+    window.addEventListener('keydown', (e) => {
+        if(e.key === konamiCode[konamiIndex]) {
+            konamiIndex++;
+            if(konamiIndex === konamiCode.length) {
+                // Trigger Easter Egg
+                const toast = document.getElementById('konami-toast');
+                if(toast) {
+                    toast.classList.add('active');
+                    setTimeout(() => toast.classList.remove('active'), 4000);
+                }
+                konamiIndex = 0;
+            }
+        } else {
+            konamiIndex = 0;
+        }
+    });
+
+    // 11.3 Keyboard Shortcuts
+    const shortcutsModal = document.getElementById('shortcuts-modal');
+    window.addEventListener('keydown', (e) => {
+        // Ignore if typing in input
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        
+        const key = e.key.toLowerCase();
+        if(key === 'h') lenis.scrollTo('#hero');
+        if(key === 't') lenis.scrollTo('#timeline');
+        if(key === 'f') lenis.scrollTo('#closing');
+        if(key === '?') {
+            if(shortcutsModal) shortcutsModal.classList.toggle('active');
+        } else if (shortcutsModal && shortcutsModal.classList.contains('active') && key === 'escape') {
+            shortcutsModal.classList.remove('active');
+        }
+    });
+
+    // 11.4 Milestone Linger Badges
+    const lingerMessages = [
+        "This is where it all started.",
+        "The first step is always the hardest.",
+        "Double the load. Double the growth.",
+        "Every expert was once a beginner.",
+        "Pressure makes diamonds.",
+        "Curiosity has no boundaries.",
+        "This realization changed everything.",
+        "The future is being written."
+    ];
+    
+    document.querySelectorAll('.milestone-card-wrapper').forEach((wrapper, index) => {
+        let lingerTimer;
+        
+        // Create badge
+        const badge = document.createElement('div');
+        badge.className = 'linger-badge';
+        badge.innerHTML = `✦ ${lingerMessages[index] || "You paused here."}`;
+        wrapper.appendChild(badge);
+
+        wrapper.addEventListener('mouseenter', () => {
+            lingerTimer = setTimeout(() => {
+                badge.classList.add('active');
+            }, 3000);
+        });
+
+        wrapper.addEventListener('mouseleave', () => {
+            clearTimeout(lingerTimer);
+            badge.classList.remove('active');
+        });
+    });
+
+    // 11.5 Mobile Shake
+    let lastX, lastY, lastZ;
+    let shakeTimer;
+    window.addEventListener('devicemotion', (e) => {
+        const acc = e.accelerationIncludingGravity;
+        if(!acc) return;
+        
+        if(!lastX) {
+            lastX = acc.x; lastY = acc.y; lastZ = acc.z;
+            return;
+        }
+        
+        const deltaX = Math.abs(acc.x - lastX);
+        const deltaY = Math.abs(acc.y - lastY);
+        const deltaZ = Math.abs(acc.z - lastZ);
+        
+        if(deltaX + deltaY + deltaZ > 25) {
+            // Threshold exceeded, user shook device
+            if(!shakeTimer) {
+                const toast = document.getElementById('mobile-shake-toast');
+                if(toast) {
+                    toast.classList.add('active');
+                    // Flash screen lime
+                    const flash = document.createElement('div');
+                    flash.style.position = 'fixed';
+                    flash.style.inset = 0;
+                    flash.style.background = 'var(--lime)';
+                    flash.style.opacity = '0.3';
+                    flash.style.zIndex = '99999';
+                    flash.style.pointerEvents = 'none';
+                    flash.style.transition = 'opacity 0.5s ease';
+                    document.body.appendChild(flash);
+                    
+                    setTimeout(() => {
+                        flash.style.opacity = '0';
+                        setTimeout(() => flash.remove(), 500);
+                        toast.classList.remove('active');
+                    }, 2000);
+                }
+                shakeTimer = setTimeout(() => { shakeTimer = null; }, 3000);
+            }
+        }
+        
+        lastX = acc.x; lastY = acc.y; lastZ = acc.z;
+    });
+
     // Re-bind hover effects to newly injected UI elements
     bindHoverEffects();
 });
