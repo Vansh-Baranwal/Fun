@@ -180,6 +180,90 @@
             <section class="chapter-divider" data-number="06" data-title="THE MULTIVERSE" data-subtitle="Every domain, a new world."></section>
             <section class="chapter-divider" data-number="07" data-title="TURNING POINT" data-subtitle="The day everything shifted."></section>
             <section class="chapter-divider" data-number="08" data-title="UNWRITTEN" data-subtitle="The best is still ahead."></section>
+
+            <!-- THE TIMELINE SKELETON -->
+            <section id="timeline" class="timeline-container">
+                <!-- SVG Spine -->
+                <div class="timeline-spine">
+                    <svg class="spine-svg" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="spine-glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                                <feMerge>
+                                    <feMergeNode in="blur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <line class="spine-line" x1="0" y1="0" x2="0" y2="100%" stroke="var(--lime)" stroke-width="2" filter="url(#spine-glow)"/>
+                    </svg>
+                </div>
+
+                <!-- 8 Milestone Card Slots -->
+                <div class="milestone-row" data-side="left">
+                    <div class="milestone-node"></div>
+                    <div class="milestone-connector"></div>
+                    <div class="milestone-card-wrapper" data-cursor="hover">
+                        <div class="milestone-card"></div>
+                    </div>
+                </div>
+
+                <div class="milestone-row" data-side="right">
+                    <div class="milestone-node"></div>
+                    <div class="milestone-connector"></div>
+                    <div class="milestone-card-wrapper" data-cursor="hover">
+                        <div class="milestone-card"></div>
+                    </div>
+                </div>
+
+                <div class="milestone-row" data-side="left">
+                    <div class="milestone-node"></div>
+                    <div class="milestone-connector"></div>
+                    <div class="milestone-card-wrapper" data-cursor="hover">
+                        <div class="milestone-card"></div>
+                    </div>
+                </div>
+
+                <div class="milestone-row" data-side="right">
+                    <div class="milestone-node"></div>
+                    <div class="milestone-connector"></div>
+                    <div class="milestone-card-wrapper" data-cursor="hover">
+                        <div class="milestone-card"></div>
+                    </div>
+                </div>
+
+                <div class="milestone-row" data-side="left">
+                    <div class="milestone-node"></div>
+                    <div class="milestone-connector"></div>
+                    <div class="milestone-card-wrapper" data-cursor="hover">
+                        <div class="milestone-card"></div>
+                    </div>
+                </div>
+
+                <div class="milestone-row" data-side="right">
+                    <div class="milestone-node"></div>
+                    <div class="milestone-connector"></div>
+                    <div class="milestone-card-wrapper" data-cursor="hover">
+                        <div class="milestone-card"></div>
+                    </div>
+                </div>
+
+                <div class="milestone-row" data-side="left">
+                    <div class="milestone-node"></div>
+                    <div class="milestone-connector"></div>
+                    <div class="milestone-card-wrapper" data-cursor="hover">
+                        <div class="milestone-card"></div>
+                    </div>
+                </div>
+
+                <div class="milestone-row" data-side="right">
+                    <div class="milestone-node"></div>
+                    <div class="milestone-connector"></div>
+                    <div class="milestone-card-wrapper" data-cursor="hover">
+                        <div class="milestone-card"></div>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 
