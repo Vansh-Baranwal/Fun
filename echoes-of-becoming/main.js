@@ -79,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
             start: 'top top',
             end: 'bottom bottom',
             scrub: 0.05 // Tiny bit of smoothing on the scrub feels premium
+        }
     });
 
     // ==========================================================================
@@ -485,8 +486,18 @@ document.addEventListener("DOMContentLoaded", () => {
     let isPlaying = false;
 
     if (soundToggle && ambientAudio) {
-        soundToggle.addEventListener('click', () => {
-            if (isPlaying) {
+        let audioPlaying = false;
+        let playPromise = null;
+
+        soundToggle.addEventListener('click', async () => {
+            // Guard: no source loaded
+            if (!ambientAudio.src && ambientAudio.querySelectorAll('source').length === 0) return;
+
+            if (audioPlaying) {
+                // Wait for any pending play() to resolve before pausing
+                if (playPromise) {
+                    try { await playPromise; } catch(_) { /* ignored */ }
+                }
                 ambientAudio.pause();
                 soundToggle.innerHTML = `
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -495,17 +506,20 @@ document.addEventListener("DOMContentLoaded", () => {
                         <line x1="17" y1="9" x2="23" y2="15"></line>
                     </svg>
                 `;
+                audioPlaying = false;
             } else {
-                ambientAudio.play().catch(e => console.log("Audio playback prevented", e));
-                soundToggle.innerHTML = `
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-                    </svg>
-                `;
+                playPromise = ambientAudio.play();
+                playPromise.then(() => {
+                    soundToggle.innerHTML = `
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                        </svg>
+                    `;
+                    audioPlaying = true;
+                }).catch(() => { /* No audio source available or browser blocked autoplay */ });
             }
-            isPlaying = !isPlaying;
         });
     }
 
