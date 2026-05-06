@@ -689,6 +689,103 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // ==========================================================================
+    // 9. Reusable Chapter Dividers
+    // ==========================================================================
+    const chapterDividers = document.querySelectorAll('.chapter-divider');
+    
+    // Atmospheric color palette for subtle variations per chapter
+    const atmosphericColors = [
+        'rgba(200, 255, 0, 0.03)',   // 1. Lime soft
+        'rgba(0, 212, 255, 0.04)',   // 2. Cyan deep
+        'rgba(123, 97, 255, 0.05)',  // 3. Violet emotion
+        'rgba(255, 107, 53, 0.04)',  // 4. Orange heat/grind
+        'rgba(255, 255, 255, 0.02)', // 5. Stark white pressure
+        'rgba(0, 212, 255, 0.05)',   // 6. Cyan multiverse
+        'rgba(200, 255, 0, 0.05)',   // 7. Lime intense
+        'rgba(123, 97, 255, 0.06)'   // 8. Violet soft end
+    ];
+
+    chapterDividers.forEach((divider, index) => {
+        const number = divider.getAttribute('data-number');
+        const title = divider.getAttribute('data-title');
+        const subtitle = divider.getAttribute('data-subtitle');
+        
+        // Build DOM
+        divider.innerHTML = `
+            <div class="chapter-ghost">${number}</div>
+            <div class="chapter-content">
+                <h2 class="chapter-title">${title}</h2>
+                <p class="chapter-subtitle">${subtitle}</p>
+            </div>
+            <div class="chapter-rule"></div>
+        `;
+        
+        // Apply Atmospheric Variation & Rhythm
+        const glowColor = atmosphericColors[index % atmosphericColors.length];
+        divider.style.setProperty('--atmosphere-color', glowColor);
+        divider.style.setProperty('--atmosphere-opacity', '1');
+        
+        // Dynamic pacing: inject breathing room before major acts
+        if (index === 2 || index === 6) {
+            divider.style.marginTop = '15vh';
+            divider.style.marginBottom = '15vh';
+        } else {
+            divider.style.marginTop = '10vh';
+            divider.style.marginBottom = '10vh';
+        }
+
+        // GSAP ScrollTrigger
+        const titleEl = divider.querySelector('.chapter-title');
+        const subtitleEl = divider.querySelector('.chapter-subtitle');
+        const ruleEl = divider.querySelector('.chapter-rule');
+        const ghostEl = divider.querySelector('.chapter-ghost');
+
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: divider,
+                start: 'top 80%',
+                end: 'center center',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        // 1. Ghost subtle parallax up
+        gsap.to(ghostEl, {
+            yPercent: -15,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: divider,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true
+            }
+        });
+
+        // 2. Blur to Sharp Reveal
+        tl.to(titleEl, {
+            y: 0,
+            opacity: 1,
+            filter: 'blur(0px)',
+            duration: 1.2,
+            ease: 'power3.out'
+        }, 0);
+
+        // 3. Poetic line fades in
+        tl.to(subtitleEl, {
+            opacity: 0.8,
+            duration: 1,
+            ease: 'power2.out'
+        }, 0.4);
+
+        // 4. Glowing rule expands from center
+        tl.to(ruleEl, {
+            width: '100%',
+            duration: 1.5,
+            ease: 'power4.inOut'
+        }, 0.2);
+    });
+
     // Re-bind hover effects to newly injected UI elements
     bindHoverEffects();
 });
