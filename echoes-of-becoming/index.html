@@ -210,7 +210,7 @@
                                 <span class="card-year">2019</span>
                             </div>
                             <h3 class="card-title">The Beginning</h3>
-                            <p class="card-body">Before the code, there was just curiosity. A kid staring at a screen wondering — how does this work? Who built this? Can I build this?</p>
+                            <p class="card-body">Before the code, there was just <span class="whisper" data-whisper="It never left.">curiosity</span>. A kid staring at a screen wondering — how does this work? Who built this? Can I build this?</p>
                             <div class="card-visual visual-typewriter">
                                 <div class="typewriter-text">&gt; "I want to build things like this someday..."</div>
                             </div>
@@ -300,7 +300,7 @@
                                 </div>
                             </div>
                             <div class="card-tags">
-                                <span>#firstprojects</span><span>#debugging</span><span>#persistence</span><span>#3am</span>
+                                <span class="whisper" data-whisper="Still my cardio.">#debugging</span><span>#firstprojects</span><span>#persistence</span><span>#3am</span>
                             </div>
                         </div>
                     </div>
@@ -326,7 +326,7 @@
                             </div>
                             <div class="stats-row">8 Hackathons | 3 Wins | 1 All-nighter I'll never forget</div>
                             <div class="card-tags">
-                                <span>#hackathon</span><span>#teamwork</span><span>#shipped</span><span>#pressure</span>
+                                <span class="whisper" data-whisper="Best 36 hours of my life.">#hackathon</span><span>#teamwork</span><span>#shipped</span><span>#pressure</span>
                             </div>
                         </div>
                     </div>
@@ -379,7 +379,7 @@
                                 <span class="card-year">2024</span>
                             </div>
                             <h3 class="card-title">Realizations & Growth</h3>
-                            <p class="card-body">Talent is common. Consistency is rare. I stopped comparing my chapter 1 to everyone else's chapter 10. That was the real breakthrough.</p>
+                            <p class="card-body">Talent is common. <span class="whisper" data-whisper="The hardest skill I learned.">Consistency</span> is rare. I stopped comparing my chapter 1 to everyone else's chapter 10. That was the real breakthrough.</p>
                             
                             <div class="card-visual visual-quote">
                                 <div class="floating-quote">"Consistency beats talent when talent isn't consistent."</div>
@@ -439,7 +439,7 @@
                             </div>
                             
                             <div class="card-tags">
-                                <span>#future</span><span>#vision</span><span>#builder</span><span>#impact</span>
+                                <span class="whisper" data-whisper="Watch this space.">#future</span><span>#vision</span><span>#builder</span><span>#impact</span>
                             </div>
                         </div>
                     </div>
@@ -491,6 +491,29 @@
     <!-- Three.js: 3D particle systems -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     
+    <!-- EASTER EGG UI ELEMENTS -->
+    <div id="konami-toast" class="easter-toast">
+        <span class="toast-icon">🏆</span>
+        <span class="toast-text">ACHIEVEMENT UNLOCKED: You found the secret. Impressive.</span>
+    </div>
+
+    <div id="mobile-shake-toast" class="easter-toast">
+        <span class="toast-icon">⚡</span>
+        <span class="toast-text">Energy detected. Keep building.</span>
+    </div>
+
+    <div id="shortcuts-modal" class="shortcuts-modal">
+        <div class="shortcuts-content">
+            <h3>Keyboard Shortcuts</h3>
+            <ul>
+                <li><kbd>H</kbd> <span>Hero Section</span></li>
+                <li><kbd>T</kbd> <span>Timeline Section</span></li>
+                <li><kbd>F</kbd> <span>Future Section</span></li>
+                <li><kbd>?</kbd> <span>Toggle Menu</span></li>
+            </ul>
+        </div>
+    </div>
+
     <!-- Core Application Logic -->
     <script src="main.js"></script>
 </body>
