@@ -4,6 +4,9 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Global device flags
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+    const isMobileViewport = window.innerWidth < 768;
     // Utility for splitting text into spans for letter animation
     function splitTextToChars(selector) {
         const elements = document.querySelectorAll(selector);
@@ -42,7 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(raf);
 
     // Pause Lenis initially while loading screen is active
-    lenis.stop();
+    if(lenis) lenis.stop();
+
+    // Destroy Lenis natively on mobile to favor native scroll
+    if(isMobileViewport || isTouchDevice) {
+        lenis.destroy();
+        lenis = null;
+    }
 
     // ==========================================================================
     // 2. GSAP & ScrollTrigger Integration
@@ -50,11 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
     gsap.registerPlugin(ScrollTrigger);
 
     // Keep ScrollTrigger in sync with Lenis
-    lenis.on('scroll', ScrollTrigger.update);
-
-    gsap.ticker.add((time) => {
-        lenis.raf(time * 1000);
-    });
+    if(lenis) {
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+    }
     
     // Prevent GSAP from causing lag spikes when syncing
     gsap.ticker.lagSmoothing(0);
@@ -94,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const masterTl = gsap.timeline({
             onComplete: () => {
                 loadingScreen.remove();
-                lenis.start(); // Re-enable smooth scrolling
+                if(lenis) lenis.start(); // Re-enable smooth scrolling
                 
                 // ==========================================================================
                 // Hero Reveal Sequence
@@ -312,7 +322,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Particles (Stardust)
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 2500;
+        let particlesCount = 2500;
+        if(isMobileViewport) particlesCount = 400;
+        else if(window.innerWidth < 1200) particlesCount = 800;
+        
         const posArray = new Float32Array(particlesCount * 3);
         const colorsArray = new Float32Array(particlesCount * 3);
 
@@ -365,17 +378,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         scene.add(orbitGroup);
 
-        // Resize handler
+        // Resize handler (Debounced)
+        let threeResizeTimer;
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            
-            if(window.innerWidth < 768) {
-                orbitGroup.position.set(0, 5, -10);
-            } else {
-                orbitGroup.position.set(-15, 0, 0);
-            }
+            clearTimeout(threeResizeTimer);
+            threeResizeTimer = setTimeout(() => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                
+                if(window.innerWidth < 768) {
+                    orbitGroup.position.set(0, 5, -10);
+                } else {
+                    orbitGroup.position.set(-15, 0, 0);
+                }
+            }, 250);
         });
         
         if(window.innerWidth < 768) orbitGroup.position.set(0, 5, -10);
@@ -394,6 +411,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const clock = new THREE.Clock();
 
         const tick = () => {
+            if (document.visibilityState === 'hidden') {
+                window.requestAnimationFrame(tick);
+                return;
+            }
+            
             const elapsedTime = clock.getElapsedTime();
 
             particlesMesh.rotation.y = elapsedTime * 0.015;
@@ -448,8 +470,10 @@ document.addEventListener("DOMContentLoaded", () => {
             gsap.to(btn.querySelector('.btn-text'), { x: 0, y: 0, duration: 1, ease: 'elastic.out(1, 0.3)' });
         });
         
-        btn.addEventListener('click', () => {
-            lenis.scrollTo('#introduction', { duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if(lenis) lenis.scrollTo('#introduction', { duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+            else document.getElementById('introduction').scrollIntoView({ behavior: 'smooth' });
         });
     });
 
@@ -514,7 +538,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const hologramWrapper = document.querySelector('.hologram-wrapper');
     const hologramCard = document.querySelector('.hologram-card');
     
-    if(hologramWrapper && hologramCard) {
+    if(hologramWrapper && hologramCard && !isTouchDevice) {
         hologramWrapper.addEventListener('mousemove', (e) => {
             const rect = hologramWrapper.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -622,6 +646,7 @@ document.addEventListener("DOMContentLoaded", () => {
             scrollTrigger: {
                 trigger: introSection,
                 start: 'top 70%',
+                once: true
             }
         });
         
@@ -962,9 +987,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
         
         const key = e.key.toLowerCase();
-        if(key === 'h') lenis.scrollTo('#hero');
-        if(key === 't') lenis.scrollTo('#timeline');
-        if(key === 'f') lenis.scrollTo('#closing');
+        if(key === 'h') { if(lenis) lenis.scrollTo('#hero'); else window.scrollTo(0, 0); }
+        if(key === 't') { if(lenis) lenis.scrollTo('#timeline'); else document.getElementById('timeline').scrollIntoView(); }
+        if(key === 'f') { if(lenis) lenis.scrollTo('#closing'); else document.getElementById('closing').scrollIntoView(); }
         if(key === '?') {
             if(shortcutsModal) shortcutsModal.classList.toggle('active');
         } else if (shortcutsModal && shortcutsModal.classList.contains('active') && key === 'escape') {
