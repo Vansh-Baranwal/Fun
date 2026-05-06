@@ -824,7 +824,7 @@ html.lenis, html.lenis body {
     top: 50%;
     transform: translateY(-50%);
     width: 400px;
-    height: 220px;
+    height: 380px; /* Increased to fit rich content */
     perspective: 1000px;
 }
 
@@ -859,6 +859,210 @@ html.lenis, html.lenis body {
 
 .milestone-card:hover {
     border-color: rgba(200, 255, 0, 0.15);
+}
+
+/* ==========================================================================
+   Milestone Card Internals
+   ========================================================================== */
+.milestone-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+/* Card 1: Origins */
+.card-origins {
+    background: rgba(20, 10, 5, 0.6);
+    border-color: rgba(255, 107, 53, 0.3);
+    box-shadow: inset 0 0 20px rgba(255, 107, 53, 0.05);
+}
+.card-origins.revealed { border-color: rgba(255, 107, 53, 0.6); }
+
+/* Card 2: Leap */
+.card-leap {
+    background: rgba(0, 10, 20, 0.6);
+    border-color: rgba(0, 212, 255, 0.3);
+    box-shadow: inset 0 0 20px rgba(0, 212, 255, 0.05);
+}
+.card-leap.revealed { border-color: rgba(0, 212, 255, 0.6); }
+
+/* Card 3: Hard Mode */
+.card-hardmode {
+    background: rgba(10, 5, 20, 0.6);
+    border-color: rgba(123, 97, 255, 0.3);
+    box-shadow: inset 0 0 20px rgba(123, 97, 255, 0.05);
+}
+.card-hardmode.revealed { border-color: rgba(123, 97, 255, 0.6); }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.card-year {
+    font-family: var(--font-tech);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+}
+.card-origins .card-year { color: #FF6B35; text-shadow: 0 0 8px rgba(255,107,53,0.5); }
+.card-leap .card-year { color: #00D4FF; text-shadow: 0 0 8px rgba(0,212,255,0.5); }
+.card-hardmode .card-year { color: #7B61FF; text-shadow: 0 0 8px rgba(123,97,255,0.5); }
+
+.card-title {
+    font-family: var(--font-headline);
+    font-size: 1.8rem;
+    font-style: italic;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.card-body {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--text);
+    opacity: 0.8;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.card-visual {
+    flex-grow: 1;
+    min-height: 80px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Visual A: Typewriter */
+.visual-typewriter {
+    padding: 0 1rem;
+    justify-content: flex-start;
+}
+.typewriter-text {
+    font-family: var(--font-tech);
+    font-size: 0.8rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+}
+.card-origins.revealed .typewriter-text {
+    animation: typing 3s steps(40, end) 0.8s forwards;
+}
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* Visual B: Chaos Grid */
+.chaos-word {
+    font-family: var(--font-tech);
+    font-size: 0.7rem;
+    color: #00D4FF;
+    position: absolute;
+    opacity: 0;
+}
+.card-leap.revealed .chaos-word {
+    animation: organize-grid 3s cubic-bezier(0.25, 1, 0.5, 1) 0.5s forwards;
+}
+.w-1 { transform: translate(-40px, -20px) rotate(-15deg); --target-x: -45; --target-y: -10; }
+.w-2 { transform: translate(30px, -10px) rotate(20deg); --target-x: 45; --target-y: -10; }
+.w-3 { transform: translate(-20px, 20px) rotate(10deg); --target-x: -45; --target-y: 15; }
+.w-4 { transform: translate(40px, 10px) rotate(-25deg); --target-x: 45; --target-y: 15; }
+
+@keyframes organize-grid {
+    100% { transform: translate(calc(var(--target-x) * 1px), calc(var(--target-y) * 1px)) rotate(0); opacity: 0.7; }
+}
+
+/* Visual C: Split Screen */
+.visual-split {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.split-left, .split-right {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.split-divider {
+    width: 1px;
+    height: 60%;
+    background: rgba(123, 97, 255, 0.3);
+}
+.split-left {
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+}
+.task {
+    width: 80%;
+    height: 4px;
+    background: rgba(123, 97, 255, 0.2);
+    border-radius: 2px;
+    opacity: 0.3;
+}
+.card-hardmode.revealed .task {
+    animation: flash-task 3s infinite alternate;
+}
+.t-1 { animation-delay: 0.1s !important; }
+.t-2 { animation-delay: 0.4s !important; }
+.t-3 { animation-delay: 0.2s !important; }
+.t-4 { animation-delay: 0.5s !important; }
+
+@keyframes flash-task {
+    0% { opacity: 0.2; transform: scaleX(0.8); }
+    100% { opacity: 0.8; transform: scaleX(1); background: rgba(123, 97, 255, 0.6); }
+}
+
+.split-right svg {
+    width: 30px;
+    height: 30px;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 1.5s ease 1s;
+}
+.card-hardmode.revealed .split-right svg {
+    opacity: 1;
+    transform: translateX(0);
+    filter: drop-shadow(0 0 8px rgba(123, 97, 255, 0.8));
+}
+
+.card-quote {
+    font-family: var(--font-headline);
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--text);
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+.card-tags span {
+    font-family: var(--font-tech);
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    color: var(--text);
+    opacity: 0.6;
 }
 
 /* Responsive Mobile Layout */
