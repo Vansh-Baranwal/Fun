@@ -893,6 +893,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         }
+
+        // Closing Section Quote Reveal
+        const closingQuote = document.querySelector('.closing-quote');
+        if(closingQuote) {
+            gsap.to(closingQuote, {
+                opacity: 1,
+                filter: 'blur(0px)',
+                duration: 2,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: '.closing-section',
+                    start: 'top 50%', // Trigger when the section is halfway up the screen
+                    toggleActions: 'play none none none'
+                }
+            });
+        }
     }
 
     // Re-bind hover effects to newly injected UI elements
