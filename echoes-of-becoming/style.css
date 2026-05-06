@@ -724,6 +724,168 @@ html.lenis, html.lenis body {
     z-index: 10;
 }
 
+/* ==========================================================================
+   Timeline Container & Spine
+   ========================================================================== */
+.timeline-container {
+    position: relative;
+    width: 100vw;
+    background: #03020A;
+    padding: 10vh 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timeline-spine {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.spine-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.spine-line {
+    /* stroke-dasharray managed dynamically by JS based on true height */
+    opacity: 0.8;
+}
+
+.milestone-row {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    margin: 5vh 0;
+    z-index: 2;
+}
+
+.milestone-node {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    background: var(--bg);
+    border: 2px solid var(--lime);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(200, 255, 0, 0.4);
+    z-index: 3;
+}
+
+.milestone-node::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid var(--lime);
+    opacity: 0;
+    animation: node-pulse 3s infinite cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+@keyframes node-pulse {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { opacity: 0.3; }
+    100% { transform: scale(1.8); opacity: 0; }
+}
+
+.milestone-connector {
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 200px); /* Extends from node to card */
+    height: 1px;
+    background: linear-gradient(90deg, rgba(200,255,0,0.4), transparent);
+    z-index: 1;
+    opacity: 0.3;
+}
+
+.milestone-row[data-side="left"] .milestone-connector {
+    right: 50%;
+    background: linear-gradient(270deg, rgba(200,255,0,0.4), transparent);
+}
+
+.milestone-row[data-side="right"] .milestone-connector {
+    left: 50%;
+}
+
+.milestone-card-wrapper {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 400px;
+    height: 220px;
+    perspective: 1000px;
+}
+
+.milestone-row[data-side="left"] .milestone-card-wrapper {
+    right: calc(50% + 40px);
+}
+
+.milestone-row[data-side="right"] .milestone-card-wrapper {
+    left: calc(50% + 40px);
+}
+
+.milestone-card {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease, border-color 0.3s ease;
+    
+    /* Initial Hidden State */
+    opacity: 0;
+    transform: translateZ(-80px); /* Gentle restrained pushback */
+    transform-style: preserve-3d;
+}
+
+/* Revealed State */
+.milestone-card.revealed {
+    opacity: 1;
+    transform: translateZ(0);
+}
+
+.milestone-card:hover {
+    border-color: rgba(200, 255, 0, 0.15);
+}
+
+/* Responsive Mobile Layout */
+@media (max-width: 900px) {
+    .timeline-spine {
+        left: 30px;
+    }
+    
+    .milestone-node {
+        left: 30px;
+    }
+    
+    .milestone-row[data-side="left"] .milestone-connector,
+    .milestone-row[data-side="right"] .milestone-connector {
+        left: 30px;
+        width: 30px;
+        background: linear-gradient(90deg, rgba(200,255,0,0.5), transparent);
+    }
+    
+    .milestone-row[data-side="left"] .milestone-card-wrapper,
+    .milestone-row[data-side="right"] .milestone-card-wrapper {
+        left: 70px;
+        right: 20px;
+        width: calc(100vw - 100px);
+    }
+}
+
 /* 1. Global Film Grain */
 .grain {
     position: fixed;

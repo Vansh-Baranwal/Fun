@@ -786,6 +786,82 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 0.2);
     });
 
+    // ==========================================================================
+    // 10. Timeline Skeleton Logic
+    // ==========================================================================
+    const timelineContainer = document.querySelector('.timeline-container');
+    const spineLine = document.querySelector('.spine-line');
+    
+    if(timelineContainer && spineLine) {
+        // SVG Spine Scroll Drawing
+        // We set a massive strokeDasharray artificially so we can scrub it backwards.
+        // It's a clean hack since SVG line lengths scale dynamically in a fluid container.
+        gsap.fromTo(spineLine, 
+            { strokeDasharray: '20000', strokeDashoffset: '20000' },
+            {
+                strokeDashoffset: 0,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: timelineContainer,
+                    start: 'top center',
+                    end: 'bottom center',
+                    scrub: true
+                }
+            }
+        );
+        
+        // Milestone Card Reveal (IntersectionObserver for elegant fading)
+        const cards = document.querySelectorAll('.milestone-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, { threshold: 0.15 });
+        
+        cards.forEach(card => observer.observe(card));
+        
+        // Cinematic, Restrained 3D Card Tilt
+        const cardWrappers = document.querySelectorAll('.milestone-card-wrapper');
+        cardWrappers.forEach(wrapper => {
+            const card = wrapper.querySelector('.milestone-card');
+            
+            wrapper.addEventListener('mousemove', (e) => {
+                if(!card.classList.contains('revealed')) return;
+                
+                const rect = wrapper.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Extremely restrained tilt (max 6 degrees)
+                const rotateX = ((y - centerY) / centerY) * -6;
+                const rotateY = ((x - centerX) / centerX) * 6;
+                
+                gsap.to(card, {
+                    rotateX: rotateX,
+                    rotateY: rotateY,
+                    duration: 0.4,
+                    ease: 'power2.out'
+                });
+            });
+            
+            wrapper.addEventListener('mouseleave', () => {
+                if(!card.classList.contains('revealed')) return;
+                
+                gsap.to(card, {
+                    rotateX: 0,
+                    rotateY: 0,
+                    duration: 0.8,
+                    ease: 'power2.out' // Smooth, non-elastic recovery
+                });
+            });
+        });
+    }
+
     // Re-bind hover effects to newly injected UI elements
     bindHoverEffects();
 });
