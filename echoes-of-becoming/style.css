@@ -1,0 +1,474 @@
+:root {
+    /* Color Palette */
+    --bg: #03020A;
+    --lime: #C8FF00;
+    --orange: #FF6B35;
+    --violet: #7B61FF;
+    --cyan: #00D4FF;
+    --text: #EDE8D0;
+
+    /* Typography Hierarchy */
+    --font-headline: 'Playfair Display', serif; /* Italic, expressive */
+    --font-tech: 'Space Mono', monospace;       /* Technical data, dates */
+    --font-label: 'Bebas Neue', sans-serif;     /* Impactful, caps labels */
+    --font-body: 'DM Sans', sans-serif;         /* Clean, readable body */
+
+    /* Global System Variables */
+    --cursor-size: 8px;
+    --spacing-sm: 1rem;
+    --spacing-md: 2.5rem;
+    --spacing-lg: 5rem;
+    --spacing-xl: 10rem;
+}
+
+/* ==========================================================================
+   Reset & Global Styles
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: none; /* Hide default OS cursor */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   Lenis Smooth Scroll Recommendations
+   ========================================================================== */
+html.lenis, html.lenis body {
+    height: auto;
+}
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   Custom Scrollbar
+   ========================================================================== */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(237, 232, 208, 0.15);
+    border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(237, 232, 208, 0.3);
+}
+
+/* ==========================================================================
+   Cinematic Overlays & UI
+   ========================================================================== */
+
+/* Loading Screen */
+#loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    z-index: 2;
+}
+
+.monogram-svg {
+    width: 60px;
+    height: 60px;
+    overflow: visible;
+    filter: drop-shadow(0 0 8px rgba(200, 255, 0, 0.4));
+}
+
+.terminal-loader {
+    font-family: var(--font-tech);
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+}
+
+.terminal-static {
+    color: rgba(237, 232, 208, 0.4);
+    letter-spacing: 0.05em;
+}
+
+.terminal-progress {
+    color: var(--lime);
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 6px rgba(200, 255, 0, 0.5);
+}
+
+.loader-blocks {
+    display: inline-block;
+    min-width: 8ch;
+    text-align: left;
+}
+
+.bloom-flash {
+    position: absolute;
+    inset: 0;
+    background: #ffffff;
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.hero-section {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#hero-webgl {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.sound-toggle {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    cursor: none;
+}
+
+.sound-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--lime);
+    color: var(--lime);
+    transform: scale(1.05);
+}
+
+.sound-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hero-text-wrapper {
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.hero-label {
+    font-family: var(--font-tech);
+    color: var(--cyan);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+}
+
+.hero-headline {
+    font-family: var(--font-headline);
+    font-size: clamp(3rem, 5vw, 6rem);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.1;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+}
+
+.hero-headline span.line-1, .hero-headline span.line-2 {
+    display: inline-block;
+}
+
+.char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.hero-subtext {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--text);
+    opacity: 0.7;
+    max-width: 500px;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    transform: translateY(20px);
+    opacity: 0;
+}
+
+.hero-counters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    opacity: 0;
+}
+
+.counter-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.counter-label {
+    font-family: var(--font-tech);
+    font-size: 0.75rem;
+    color: var(--lime);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}
+
+.counter-value {
+    font-family: var(--font-tech);
+    font-size: 2.5rem;
+    color: #ffffff;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.magnetic-btn {
+    position: relative;
+    padding: 1rem 2.5rem;
+    background: rgba(3, 2, 10, 0.8);
+    border: 1px solid var(--lime);
+    border-radius: 30px;
+    color: #ffffff;
+    font-family: var(--font-tech);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    opacity: 0;
+    cursor: none;
+}
+
+.magnetic-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(200,255,0,0.2) 0%, transparent 60%);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease;
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.magnetic-btn:hover {
+    box-shadow: 0 0 15px rgba(200, 255, 0, 0.3);
+}
+
+.magnetic-btn:hover::before {
+    transform: translate(-50%, -50%) scale(2);
+}
+
+.btn-text {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 10;
+    opacity: 0;
+}
+
+.scroll-indicator .chevron {
+    color: var(--lime);
+    font-size: 1.5rem;
+}
+
+.scroll-indicator .scroll-text {
+    font-family: var(--font-tech);
+    font-size: 0.7rem;
+    color: var(--text);
+    opacity: 0.5;
+    letter-spacing: 0.1em;
+}
+
+/* 1. Global Film Grain */
+.grain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Let clicks pass through */
+    z-index: 9000;
+    opacity: 0.04; /* Very subtle so it's felt, not necessarily seen strongly */
+}
+.grain::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    /* Generates organic SVG noise directly in CSS */
+    background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+    animation: grain-animation 8s steps(10) infinite;
+}
+
+@keyframes grain-animation {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-5%, -10%); }
+    20% { transform: translate(-15%, 5%); }
+    30% { transform: translate(7%, -25%); }
+    40% { transform: translate(-5%, 25%); }
+    50% { transform: translate(-15%, 10%); }
+    60% { transform: translate(15%, 0%); }
+    70% { transform: translate(0%, 15%); }
+    80% { transform: translate(3%, 35%); }
+    90% { transform: translate(-10%, 10%); }
+}
+
+/* 2. Global Timeline Progress Bar */
+.progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1px; /* Ultra-thin aesthetic */
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.05); /* Track background */
+    z-index: 9500;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 0%; /* Driven by GSAP in main.js */
+    background: var(--lime);
+    box-shadow: 0 0 8px var(--lime), 0 0 16px var(--lime);
+    transform-origin: top;
+}
+
+/* 3. Custom Glowing Cursor */
+.cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--cursor-size);
+    height: var(--cursor-size);
+    background: var(--lime);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 8px var(--lime), 0 0 16px var(--lime);
+    transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                background 0.3s ease;
+}
+
+.cursor-trail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(var(--cursor-size) * 3);
+    height: calc(var(--cursor-size) * 3);
+    border: 1px solid rgba(200, 255, 0, 0.3);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                background 0.3s ease,
+                border-color 0.3s ease;
+}
+
+/* Hover state triggers for interactive elements */
+body.hovering .cursor {
+    width: 4px;
+    height: 4px;
+    background: var(--text);
+    box-shadow: 0 0 4px var(--text);
+}
+
+body.hovering .cursor-trail {
+    width: calc(var(--cursor-size) * 6);
+    height: calc(var(--cursor-size) * 6);
+    background: rgba(200, 255, 0, 0.08); /* Inner glow */
+    border-color: rgba(200, 255, 0, 0.8);
+    backdrop-filter: blur(2px); /* Slight glassmorphism on hover */
+}
+
+/* Ensure native cursors don't show up on clickable elements */
+a, button, [data-cursor="hover"] {
+    cursor: none;
+}

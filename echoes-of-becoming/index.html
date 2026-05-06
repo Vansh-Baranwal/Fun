@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoes of Becoming</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    
+    <!-- Core Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Screen Overlay -->
+    <div id="loading-screen">
+        <div class="bloom-flash"></div>
+        <div class="loader-content">
+            <!-- Geometric Monogram SVG -->
+            <svg class="monogram-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path class="monogram-path" d="M 50 5 L 95 50 L 50 95 L 5 50 Z" stroke="var(--lime)" stroke-width="2" fill="transparent" />
+                <path class="monogram-inner" d="M 50 25 L 75 50 L 50 75 L 25 50 Z" stroke="var(--lime)" stroke-width="1.5" fill="transparent" />
+            </svg>
+            <!-- Terminal Progress Text -->
+            <div class="terminal-loader">
+                <span class="terminal-static">&gt; Compiling your journey...</span>
+                <span class="terminal-progress">[<span class="loader-blocks"></span>] <span class="loader-percent">0%</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Cinematic UI Elements -->
+    <div class="grain"></div>
+    <div class="progress-container">
+        <div class="progress-bar"></div>
+    </div>
+    
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-trail"></div>
+
+    <!-- Main Content Area -->
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+            <!-- HERO SECTION -->
+            <section class="hero-section" id="hero">
+                <!-- Three.js Canvas -->
+                <canvas id="hero-webgl"></canvas>
+                
+                <!-- Ambient Audio Element -->
+                <audio id="ambient-audio" loop>
+                    <!-- Placeholder free ambient space audio -->
+                    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b918db42.mp3?filename=deep-space-114421.mp3" type="audio/mpeg">
+                </audio>
+
+                <!-- UI Elements -->
+                <button class="sound-toggle" data-cursor="hover" aria-label="Toggle sound">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-mute">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                    </svg>
+                </button>
+
+                <!-- Content Container -->
+                <div class="hero-content">
+                    <div class="hero-text-wrapper">
+                        <div class="hero-label">&gt; Initializing your journey...</div>
+                        <h1 class="hero-headline">
+                            <span class="line-1">Not Just Building Projects.</span><br>
+                            <span class="line-2">Building Myself.</span>
+                        </h1>
+                        <p class="hero-subtext">A story of curiosity, ambition, failure, and becoming.</p>
+                        
+                        <div class="hero-counters">
+                            <div class="counter-item">
+                                <div class="counter-label">Projects Built</div>
+                                <div class="counter-value"><span class="val" data-target="12">0</span>+</div>
+                            </div>
+                            <div class="counter-item">
+                                <div class="counter-label">Hackathons</div>
+                                <div class="counter-value"><span class="val" data-target="8">0</span>+</div>
+                            </div>
+                            <div class="counter-item">
+                                <div class="counter-label">Technologies</div>
+                                <div class="counter-value"><span class="val" data-target="15">0</span>+</div>
+                            </div>
+                            <div class="counter-item">
+                                <div class="counter-label">Nights Debugging</div>
+                                <div class="counter-value"><span class="val-infinity">∞</span></div>
+                            </div>
+                        </div>
+
+                        <button class="magnetic-btn cta-btn" data-cursor="hover">
+                            <span class="btn-text">Start The Journey &darr;</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scroll Indicator -->
+                <div class="scroll-indicator">
+                    <div class="chevron">&darr;</div>
+                    <div class="scroll-text">scroll to begin</div>
+                </div>
+            </section>
+
+            <!-- Temporary Section to allow scrolling to test timeline smooth scroll -->
+            <section id="timeline" style="height: 150vh; display: flex; align-items: flex-start; justify-content: center; padding-top: 15vh; border-top: 1px solid rgba(255,255,255,0.05);">
+                <p style="opacity: 0.3">Timeline Section Begins Here</p>
+            </section>
+        </div>
+    </main>
+
+    <!-- External Libraries -->
+    <!-- Lenis: Smooth Scrolling -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <!-- GSAP: High-performance animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Three.js: 3D particle systems -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    
+    <!-- Core Application Logic -->
+    <script src="main.js"></script>
+</body>
+</html>
