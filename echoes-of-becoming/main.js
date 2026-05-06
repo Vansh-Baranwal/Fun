@@ -449,7 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         
         btn.addEventListener('click', () => {
-            lenis.scrollTo('#timeline', { duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+            lenis.scrollTo('#introduction', { duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
         });
     });
 
@@ -505,6 +505,189 @@ document.addEventListener("DOMContentLoaded", () => {
             scrub: true
         }
     });
+
+    // ==========================================================================
+    // 8. Introduction Section Logic
+    // ==========================================================================
+
+    // A. 3D Hologram Tilt
+    const hologramWrapper = document.querySelector('.hologram-wrapper');
+    const hologramCard = document.querySelector('.hologram-card');
+    
+    if(hologramWrapper && hologramCard) {
+        hologramWrapper.addEventListener('mousemove', (e) => {
+            const rect = hologramWrapper.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -15; // Max 15 deg tilt
+            const rotateY = ((x - centerX) / centerX) * 15;
+            
+            gsap.to(hologramCard, {
+                rotateX: rotateX,
+                rotateY: rotateY,
+                duration: 0.5,
+                ease: 'power2.out'
+            });
+        });
+        
+        hologramWrapper.addEventListener('mouseleave', () => {
+            gsap.to(hologramCard, {
+                rotateX: 0,
+                rotateY: 0,
+                duration: 1,
+                ease: 'elastic.out(1, 0.3)'
+            });
+        });
+    }
+
+    // B. Constellation Generation
+    const skills = [
+        { label: 'HTML', desc: 'The skeletal structure' },
+        { label: 'CSS', desc: 'The aesthetic skin' },
+        { label: 'JavaScript', desc: 'The nervous system' },
+        { label: 'React', desc: 'Component architecture' },
+        { label: 'Python', desc: 'Backend & scripting' },
+        { label: 'ML', desc: 'Data & inference' },
+        { label: 'Blockchain', desc: 'Decentralized logic' },
+        { label: 'Node', desc: 'Server environments' },
+        { label: 'Git', desc: 'Version history' },
+        { label: 'Figma', desc: 'Interface design' },
+        { label: 'Problem Solving', desc: 'Algorithmic thinking' },
+        { label: 'Curiosity', desc: 'The driving force' },
+        { label: 'Consistency', desc: 'Daily compounding' },
+        { label: 'Leadership', desc: 'Guiding teams' },
+        { label: 'Open Source', desc: 'Community collaboration' }
+    ];
+
+    const constellationContainer = document.querySelector('.constellation-container');
+    const starsContainer = document.querySelector('.constellation-stars');
+    const linesSvg = document.querySelector('.constellation-lines');
+    
+    if(constellationContainer && starsContainer && linesSvg) {
+        const starElements = [];
+        
+        skills.forEach((skill) => {
+            // Random coordinates 10% to 90%
+            const x = 10 + Math.random() * 80;
+            const y = 10 + Math.random() * 80;
+            
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = `${x}%`;
+            star.style.top = `${y}%`;
+            star.setAttribute('data-cursor', 'hover');
+            
+            const tooltip = document.createElement('div');
+            tooltip.className = 'star-tooltip';
+            tooltip.innerHTML = `<strong>${skill.label}</strong><br><span style="opacity:0.7;font-size:0.65rem;">${skill.desc}</span>`;
+            
+            star.appendChild(tooltip);
+            starsContainer.appendChild(star);
+            
+            starElements.push({ x, y, el: star });
+        });
+        
+        // Draw lines connecting closest stars
+        starElements.forEach((star, i) => {
+            const others = starElements.filter((s, index) => index !== i).map(s => {
+                const dist = Math.sqrt(Math.pow(s.x - star.x, 2) + Math.pow(s.y - star.y, 2));
+                return { ...s, dist };
+            }).sort((a, b) => a.dist - b.dist);
+            
+            for(let j = 0; j < 2; j++) {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute('x1', `${star.x}%`);
+                line.setAttribute('y1', `${star.y}%`);
+                line.setAttribute('x2', `${others[j].x}%`);
+                line.setAttribute('y2', `${others[j].y}%`);
+                
+                const length = 1000;
+                line.style.strokeDasharray = length;
+                line.style.strokeDashoffset = length;
+                line.classList.add('c-line');
+                
+                linesSvg.appendChild(line);
+            }
+        });
+    }
+
+    // C. ScrollTrigger Intro Animations
+    const introSection = document.querySelector('.intro-section');
+    if(introSection) {
+        const introTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: introSection,
+                start: 'top 70%',
+            }
+        });
+        
+        introTl.from('.intro-left', {
+            x: -100,
+            opacity: 0,
+            duration: 1.2,
+            ease: 'power3.out'
+        }, 0);
+        
+        introTl.from('.intro-right > *:not(.intro-cards)', {
+            x: 100,
+            opacity: 0,
+            duration: 1.2,
+            stagger: 0.1,
+            ease: 'power3.out'
+        }, 0.2);
+        
+        introTl.from('.stat-card', {
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power2.out'
+        }, "-=0.8");
+        
+        const introStatVals = document.querySelectorAll('.intro-section .stat-val');
+        introTl.add(() => {
+            introStatVals.forEach(val => {
+                const target = parseInt(val.getAttribute('data-target'));
+                gsap.to(val, {
+                    innerHTML: target,
+                    duration: 2,
+                    ease: 'power2.out',
+                    snap: { innerHTML: 1 }
+                });
+            });
+        }, "-=0.4");
+        
+        introTl.from('.star', {
+            scale: 0,
+            opacity: 0,
+            duration: 0.5,
+            stagger: 0.05,
+            ease: 'back.out(1.7)'
+        }, "-=0.5");
+        
+        introTl.to('.c-line', {
+            strokeDashoffset: 0,
+            duration: 1.5,
+            ease: 'power2.inOut',
+            stagger: 0.02
+        }, "-=0.5");
+        
+        if(window.innerWidth > 900) {
+            gsap.to('.constellation-container', {
+                rotation: 2,
+                x: 10,
+                y: -10,
+                duration: 10,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut'
+            });
+        }
+    }
 
     // Re-bind hover effects to newly injected UI elements
     bindHoverEffects();

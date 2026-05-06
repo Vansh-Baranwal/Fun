@@ -362,6 +362,284 @@ html.lenis, html.lenis body {
     letter-spacing: 0.1em;
 }
 
+/* ==========================================================================
+   Introduction Section
+   ========================================================================== */
+.intro-section {
+    position: relative;
+    width: 100vw;
+    min-height: 100vh;
+    background: var(--bg);
+    padding: var(--spacing-xl) var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 5;
+}
+
+.intro-grid {
+    width: 100%;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+@media (max-width: 900px) {
+    .intro-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+}
+
+/* Hologram Card */
+.intro-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+}
+
+.hologram-wrapper {
+    position: relative;
+    width: 320px;
+    height: 420px;
+    transform-style: preserve-3d;
+}
+
+.hologram-card {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(123, 97, 255, 0.05) 0%, rgba(0, 212, 255, 0.05) 100%);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(123, 97, 255, 0.3);
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(123, 97, 255, 0.15), inset 0 0 20px rgba(0, 212, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: transform 0.1s ease;
+    transform: translateZ(0); /* For JS tilt */
+}
+
+.scanlines {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, rgba(123, 97, 255, 0.05) 51%);
+    background-size: 100% 4px;
+    animation: scan 10s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes scan {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100vh; }
+}
+
+.hologram-avatar {
+    width: 150px;
+    height: 150px;
+    filter: drop-shadow(0 0 15px rgba(123, 97, 255, 0.5));
+    animation: float-hologram 6s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes float-hologram {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Orbiting Satellites */
+.satellite {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-family: var(--font-tech);
+    font-size: 0.8rem;
+    color: var(--text);
+    padding: 0.4rem 0.8rem;
+    background: rgba(3, 2, 10, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    white-space: nowrap;
+    transform-origin: center center;
+    pointer-events: none;
+}
+
+/* Base orbit animation utilizing negative rotation to keep text upright */
+@keyframes orbit-cw {
+    from { transform: translate(-50%, -50%) rotate(0deg) translateX(var(--radius)) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(360deg) translateX(var(--radius)) rotate(-360deg); }
+}
+
+@keyframes orbit-ccw {
+    from { transform: translate(-50%, -50%) rotate(360deg) translateX(var(--radius)) rotate(-360deg); }
+    to   { transform: translate(-50%, -50%) rotate(0deg) translateX(var(--radius)) rotate(0deg); }
+}
+
+.sat-1 { --radius: 200px; animation: orbit-cw 20s linear infinite; }
+.sat-2 { --radius: 240px; animation: orbit-ccw 25s linear infinite; }
+.sat-3 { --radius: 180px; animation: orbit-cw 15s linear infinite; animation-delay: -5s; }
+.sat-4 { --radius: 260px; animation: orbit-ccw 30s linear infinite; animation-delay: -10s; }
+.sat-5 { --radius: 220px; animation: orbit-cw 22s linear infinite; animation-delay: -8s; }
+.sat-6 { --radius: 190px; animation: orbit-ccw 18s linear infinite; animation-delay: -12s; }
+
+@media (max-width: 900px) {
+    .hologram-wrapper {
+        transform: scale(0.8);
+    }
+}
+
+/* Intro Right Text Content */
+.intro-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.intro-label {
+    font-family: var(--font-label);
+    color: var(--lime);
+    font-size: 1.2rem;
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+}
+
+.intro-headline {
+    font-family: var(--font-headline);
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-weight: 400;
+    font-style: italic;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.intro-body {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--text);
+    opacity: 0.7;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    max-width: 500px;
+}
+
+/* Intro Cards (Counters) */
+.intro-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.stat-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    transform: translateY(-5px);
+    border-color: rgba(200, 255, 0, 0.2);
+}
+
+.stat-num {
+    font-family: var(--font-tech);
+    font-size: 2rem;
+    color: var(--lime);
+    margin-bottom: 0.5rem;
+}
+
+.stat-desc {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--text);
+    opacity: 0.6;
+}
+
+/* Constellation Container */
+.constellation-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    height: 400px;
+    margin-top: var(--spacing-lg);
+}
+
+.constellation-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.constellation-lines line {
+    stroke: rgba(0, 212, 255, 0.15); /* cyan connecting lines */
+    stroke-width: 1px;
+}
+
+.constellation-stars {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.star {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--violet);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px var(--violet);
+    cursor: none;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.star:hover {
+    transform: translate(-50%, -50%) scale(2);
+    background: var(--lime);
+    box-shadow: 0 0 15px var(--lime);
+}
+
+.star-tooltip {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(3, 2, 10, 0.9);
+    border: 1px solid var(--lime);
+    color: var(--text);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: var(--font-tech);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(5px);
+    z-index: 100;
+}
+
+.star:hover .star-tooltip {
+    opacity: 1;
+}
+
 /* 1. Global Film Grain */
 .grain {
     position: fixed;
