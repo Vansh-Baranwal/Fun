@@ -860,6 +860,39 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             });
         });
+        // Special Turning Point Cinematic Wipe
+        const turningSection = document.querySelector('.special-turning-point');
+        if(turningSection) {
+            const splitAfter = turningSection.querySelector('.split-after');
+            const turningQuote = turningSection.querySelector('.turning-quote span');
+            
+            const turnTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: turningSection,
+                    start: 'top 40%',
+                    end: 'bottom 60%',
+                    scrub: 1 // Smooth, elegant scrubbing
+                }
+            });
+            
+            // Wipe reveal (clip path animating right to left to uncover the 50% split)
+            turnTl.to(splitAfter, {
+                clipPath: 'polygon(50% 0, 100% 0, 100% 100%, 50% 100%)',
+                ease: 'none'
+            });
+            
+            // Text blur reveal synced to scroll
+            gsap.to(turningQuote, {
+                filter: 'blur(0px)',
+                opacity: 1,
+                scrollTrigger: {
+                    trigger: turningSection,
+                    start: 'top center',
+                    end: 'center center',
+                    scrub: true
+                }
+            });
+        }
     }
 
     // Re-bind hover effects to newly injected UI elements
